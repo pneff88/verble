@@ -1,78 +1,128 @@
 import React from 'react';
 import './App.css';
-let startingKey = { letter: '', color: 'white', keyType: 'boardKey' };
 let state = {
   rows: [
-    [startingKey, startingKey, startingKey, startingKey, startingKey],
-    [startingKey, startingKey, startingKey, startingKey, startingKey],
-    [startingKey, startingKey, startingKey, startingKey, startingKey],
-    [startingKey, startingKey, startingKey, startingKey, startingKey],
-    [startingKey, startingKey, startingKey, startingKey, startingKey],
-    [startingKey, startingKey, startingKey, startingKey, startingKey]
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
+    [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
   ],
   index: [0, 0],
-  target: 'mater',
+  target: 'SEDET',
+  victor: false,
 };
 
-function App() {
-  return (
-    <div className='main'>
-      <Board rows={state.rows} />
-      <Keyboard />
-    </div>
-  );
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className='main' onClick={() => {
+        this.forceUpdate(); //I know I'm not supposed to do this but couldn't any other way. 
+        console.log("hi")
+      }}>
+        <Board rows={state.rows} />
+        <Keyboard />
+      </div>
+    );
+
+  }
+  
+}
+// function App() {
+//   return (
+//     <div className='main'>
+//       <Board rows={state.rows} />
+//       <Keyboard />
+//     </div>
+//   );
+// }
+class Space extends React.Component {
+  render() {
+
+    let boardToClassMap = {
+      boardKey: 'boardKey',
+      keyboardKey: 'keyboardKey'
+    }
+
+    let colorToClassMap = {
+      black: 'black',
+      gray: 'gray',
+      green: 'green',
+      yellow: 'yellow',
+      white: 'white',
+    };
+
+    // function with logic to convert color to classname, return a string
+    return (
+      <div
+        onClick={() => {
+          if (this.props.letter == 'ENTER') {
+            console.log('Enter pressed')
+            if (state.index[1] == 5) {
+              enterRow();
+              state.index[0] = state.index[0] + 1;
+              state.index[1] = 0;
+            }
+          } else if (this.props.letter == 'DEL') {
+            console.log('Del pressed.')
+            if (state.index[1] < 4 && state.index[1] > 0) {
+              state.index[1] = state.index[1] - 1;
+              let currentSpace = state.rows[state.index[0]][state.index[1]]
+              currentSpace.letter = '';
+            }
+          } else {
+            console.log(state);
+            let currentSpace = state.rows[state.index[0]][state.index[1]]
+            currentSpace.letter = this.props.letter;
+            console.log(state);
+            state.index[1] = state.index[1] + 1;
+          }
+          console.log(state.index)
+        }}
+        className={`space 
+        ${colorToClassMap[this.props.color]}
+        ${this.props.className}
+        ${boardToClassMap[this.props.keyType]}`
+        } >
+        {this.props.letter}
+      </div>
+    )
+  }
 }
 
-function Space(props) { //will be passed letter
-
-  let boardToClassMap = {
-    boardKey: 'boardKey',
-    keyboardKey: 'keyboardKey'
+function hasWon(){
+  let rowIndex = state.index[0];
+  for (let i = 0; i < 5; i++) {
+    let ourSpace = state.rows[rowIndex][i];
+    let char = ourSpace.letter;
+    let targetChar = state.target[i];
+    if (char != targetChar) {
+      return false
+    }
   }
+  return true
+}
 
-  let colorToClassMap = {
-    black: 'black',
-    gray: 'gray',
-    green: 'green',
-    yellow: 'yellow',
-    white: 'white',
-  };
 
-  // function with logic to convert color to classname, return a string
-  return (
-    <div
-      onClick={() => { 
-        if (props.letter=='ENTER') {
-          console.log('Enter pressed')
-          if (state.index[1]==6) {
-            //run word check
-          }
-        } else if (props.letter=='DEL') {
-          console.log('Del pressed.')
-          if (state.index[1]<6 && state.index[1] > 0) {
-            let currentSpace = state.rows[state.index[0]][state.index[1]]
-            currentSpace.letter='';
-            state.index[1]=state.index[1]-1;
-          }
-        } else {
-          console.log(props.letter);
-          let currentSpace = state.rows[state.index[0]][state.index[1]]
-          console.log(currentSpace);
-          currentSpace.letter=props.letter;
-          console.log(state.index);
-          state.index[1] = state.index[1]+1;
-          console.log(state.index);
-        }
-        
-      }}
-      className={`space 
-        ${colorToClassMap[props.color]}
-        ${props.className}
-        ${boardToClassMap[props.keyType]}`
-      } >
-      {props.letter}
-    </div>
-  )
+function enterRow() {
+  let rowIndex = state.index[0];
+  for (let i = 0; i<5; i++) {
+    let ourSpace = state.rows[rowIndex][i];
+    let char = ourSpace.letter;
+    let targetChar = state.target[i];
+    if (char==targetChar) {
+      ourSpace.color='green';
+    } else if (state.target.indexOf(char)!= -1) {
+      ourSpace.color = 'yellow'; //small problem: if the letter has already "greened" and appears a second time in the input, it will turn yellow; should be black
+    } else {
+      ourSpace.color = 'black'
+    }
+  }
+  if (hasWon()) {
+    alert('Euge! Tu es victor!')
+  }
 }
 
 function Row({ spaces }) {
