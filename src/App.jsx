@@ -4,6 +4,7 @@ import './App.css';
 
 let dictionary = [
   ["PATER", "father"],
+  ["BARBA", "beard"],
   ["MATER", "mother"],
   ["CANIS", "dog"],
   ["SEDET", "is sitting"],
@@ -29,7 +30,6 @@ let dictionary = [
   ["SATIS", "enough"],
   ["TAMEN", "however"],
   ["CERAM", "wax tablet"],
-  ["TRADIT", "hands over"],
   ["CAPIT", "takes"],
   ["IUDEX", "judge"],
   ["HODIE", "today"],
@@ -125,6 +125,8 @@ let state = {
   target: myTarget,
   answer: myAnswer,
   victor: false,
+  message: 'THIS IS A TEST',
+  modalvisibility: 'hidden',
 };
 
 
@@ -134,6 +136,7 @@ class App extends React.Component {
       <div className='main' onClick={() => {
         this.forceUpdate(); //I know I'm not supposed to do this but couldn't any other way. 
       }}>
+        <Modal message={state.message} ></Modal>
         <Board rows={state.rows} />
         <Keyboard rows={state.keyboardrows}/>
       </div>
@@ -162,17 +165,30 @@ class Space extends React.Component {
       <div
         onClick={() => {
           if (this.props.letter === 'ENTER') {
-            if (state.index[1] === 5) {
+            let myString = ''
+            for (let i = 0; i < 5; i++) {
+              let rowIndex = state.index[0];
+              let ourSpace = state.rows[rowIndex][i];
+              let char = ourSpace.letter;
+              myString += char
+            }
+            if (state.index[1] === 5 && isValidWord(myString)) {
+              let rowIndex = state.index[0];
               enterRow();
               state.index[0] = state.index[0] + 1;
               state.index[1] = 0;
+             } else {
+                state.message="Invalid word.";
+                state.modalvisibility='visible';
             }
+
           } else if (this.props.letter === 'DEL') {
             if (state.index[1] <=5 && state.index[1] > 0) {
               state.index[1] = state.index[1] - 1;
               let currentSpace = state.rows[state.index[0]][state.index[1]]
               currentSpace.letter = '';
             }
+
           } else {
             console.log(state);
             let currentSpace = state.rows[state.index[0]][state.index[1]]
@@ -181,7 +197,8 @@ class Space extends React.Component {
             state.index[1] = state.index[1] + 1;
           }
           if (state.index[0]===6) {
-            alert("Eheu! Tu non es victor...")
+            state.message="Eheu! Tu non es victor...";
+            state.modalvisibility='visible';
           }
         }}
         className={`space 
@@ -210,41 +227,52 @@ function hasWon(){
 
 function enterRow() {
   let rowIndex = state.index[0];
-  for (let i = 0; i<5; i++) {
-    let ourSpace = state.rows[rowIndex][i];
-    let char = ourSpace.letter;
-    let targetChar = state.target[i];
-    if (char===targetChar) {
-      ourSpace.color='green';
-      let myind = findKeyboardIndex(ourSpace.letter);
-      state.keyboardrows[myind[0]][myind[1]].color='green';
-    } else if (state.target.indexOf(char)!== -1) {
-      ourSpace.color = 'yellow'; //small problem: if the letter has already "greened" and appears a second time in the input, it will turn yellow; should be black
-      let myind = findKeyboardIndex(ourSpace.letter);
-      if (state.keyboardrows[myind[0]][myind[1]].color !== 'green'){
-        state.keyboardrows[myind[0]][myind[1]].color = 'yellow';
+
+    for (let i = 0; i<5; i++) {
+      let ourSpace = state.rows[rowIndex][i];
+      let char = ourSpace.letter;
+      let targetChar = state.target[i];
+      if (char===targetChar) {
+        ourSpace.color='green';
+        let myind = findKeyboardIndex(ourSpace.letter);
+        state.keyboardrows[myind[0]][myind[1]].color='green';
+      } else if (state.target.indexOf(char)!== -1) {
+        ourSpace.color = 'yellow'; //small problem: if the letter has already "greened" and appears a second time in the input, it will turn yellow; should be black
+        let myind = findKeyboardIndex(ourSpace.letter);
+        if (state.keyboardrows[myind[0]][myind[1]].color !== 'green'){
+          state.keyboardrows[myind[0]][myind[1]].color = 'yellow';
+        }
+      } else {
+        ourSpace.color = 'black'
+        let myind = findKeyboardIndex(ourSpace.letter);
+        state.keyboardrows[myind[0]][myind[1]].color = 'black';
       }
-    } else {
-      ourSpace.color = 'black'
-      let myind = findKeyboardIndex(ourSpace.letter);
-      state.keyboardrows[myind[0]][myind[1]].color = 'black';
-    }
-  }
+    } 
   if (hasWon()) {
-    window.alert('Euge! Tu es victor!')
+    state.message='Euge! Tu es victor!';
+    state.modalvisibility='visible';
   }
+  console.log(state.index)
 }
 
 function findKeyboardIndex(someletter) {
   for(let i = 0; i<state.keyboardrows.length; i++) {
     for (let j=0; j<state.keyboardrows[i].length; j++) {
-      if (state.keyboardrows[i][j].letter==someletter) {
+      if (state.keyboardrows[i][j].letter===someletter) {
         return [i,j]
       }
     }
   }
 }
 
+function isValidWord(word) {
+  for (let i = 0; i<dictionary.length; i++) {
+    if (word === dictionary[i][0]){
+      return true;
+    }
+  }
+  return false;
+}
 
 function Row({ spaces }) {
   return (
@@ -278,10 +306,18 @@ function Keyboard({ rows }) {
   )
 }
 
-// function Modal(props) {
-//   <div className = 'modal'>
-//     {this.props.message}
-//   </div>
-// }
+function Modal(props) {
+  return (
+    <div className = 'modal' style={{visibility: state.modalvisibility}}
+      onClick={() => {
+        state.modalvisibility='hidden'
+      }
+    }>
+      <div>Quintilianus * SPQR * Verble</div>
+      <div><strong>{props.message}</strong></div>
+      <div>(Click anywhere in this box to make it disappear.)</div>
+    </div>
+  )
+}
 
 export default App;
