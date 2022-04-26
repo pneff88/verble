@@ -39,22 +39,63 @@ let dictionary = [
   ["DECEM", "ten"],
   ["PAUPER", "a poor man"],
   ["PACEM", "peace"],
-    ["SOLUS", "lonely"],
-    ["CAUPO", "innkeeper"],
-    ["DIVES", "rich"],
-    ["MURUM", "wall"],
-    ["TANTUM", "only"],
-    ["MECUM", "with me"],
-    ["SENSI", "felt"],
-    ["NUBEM", "cloud"],
-    ["SONOS", "noises"],
-    ["PAVOR", "panic"],
-    ["CINIS", "ash"],
-    ["VALEO", "I feel well"],
-    ["FINIS", "end"],
-    ["FUMUM", "smoke"],
-    ["IUBEO", "order"],
-
+  ["SOLUS", "lonely"],
+  ["CAUPO", "innkeeper"],
+  ["DIVES", "rich"],
+  ["MURUM", "wall"],
+  ["TANTUM", "only"],
+  ["MECUM", "with me"],
+  ["SENSI", "felt"],
+  ["NUBEM", "cloud"],
+  ["SONOS", "noises"],
+  ["PAVOR", "panic"],
+  ["CINIS", "ash"],
+  ["VALEO", "I feel well"],
+  ["FINIS", "end"],
+  ["FUMUM", "smoke"],
+  ["IUBEO", "order"],
+  ["TURBA", "crowd"],
+  ["MANET", "remains, stays"],
+  ["PUERI", "boys"],
+  ["ABEST", "is out"],
+  ["MULTI, many"],
+  ["PUGNA", "fight"],
+  ["LAETE", "happily"],
+  ["SOLUS", "alone"],
+  ["NIHIL", "nothing"],
+  ["MISIT", "sent"],
+  ["PLENA", "full"],
+  ["SILVA", "woods, forest"],
+  ["DIXIT", "said"],
+  ["LUPUS", "wolf"],
+  ["CAUTE", "cautiously"],
+  ["ALIAM", "another"],
+  ["VIVIT", "is alive"],
+  ["UMBRA", "ghost"],
+  ["FELES", "cat"],
+  ["VENIT", "came"],
+  ["CERVI", "deer"],
+  ["LATET", "lies hidden"],
+  ["FEROX", "ferocious"],
+  ["CEPIT", "took"],
+  ["COXIT", "cooked"],
+  ["STILI", "pens (used for writing on wax tablets)"],
+  ["CURAS", "take care of"],
+  ["SAEPE", "often"],
+  ["CIVES", "citizens"],
+  ["CAVEA", "seating area"],
+  ["DEDIT", "gave"],
+  ["PEDEM", "foot, paw"],
+  ["DOLET", "hurt"],
+  ["IBANT", "used to go"],
+  ["OLEUM", "oil"],
+  ["TOGAS", "togas"],
+  ["NOVAM", "new"],
+  ["LONGE", "far"],
+  ["DONUM", "present, gift"],
+  ["INTUS", "inside"],
+  ["ALIAS", "other"],
+  ["CUPIO", "I want"]
 ]
 function selectRandomEntry() {
   let targetEntry = dictionary[Math.floor(Math.random()*dictionary.length)];
@@ -75,6 +116,11 @@ let state = {
     [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
     [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
   ],
+  keyboardrows: [
+    [{ letter: 'Q', color: 'gray', keyType: 'keyboardKey' }, { letter: 'W', color: 'gray', keyType: 'keyboardKey' }, { letter: 'E', color: 'gray', keyType: 'keyboardKey' }, { letter: 'R', color: 'gray', keyType: 'keyboardKey' }, { letter: 'T', color: 'gray', keyType: 'keyboardKey' }, { letter: 'Y', color: 'gray', keyType: 'keyboardKey' }, { letter: 'U', color: 'gray', keyType: 'keyboardKey' }, { letter: 'I', color: 'gray', keyType: 'keyboardKey' }, { letter: 'O', color: 'gray', keyType: 'keyboardKey' }, { letter: 'P', color: 'gray', keyType: 'keyboardKey' }, ],
+    [{ letter: 'A', color: 'gray', keyType: 'keyboardKey' }, { letter: 'S', color: 'gray', keyType: 'keyboardKey' }, { letter: 'D', color: 'gray', keyType: 'keyboardKey' }, { letter: 'F', color: 'gray', keyType: 'keyboardKey' }, { letter: 'G', color: 'gray', keyType: 'keyboardKey' }, { letter: 'H', color: 'gray', keyType: 'keyboardKey' }, { letter: 'J', color: 'gray', keyType: 'keyboardKey' }, { letter: 'K', color: 'gray', keyType: 'keyboardKey' }, { letter: 'L', color: 'gray', keyType: 'keyboardKey' },],
+    [{ letter: 'ENTER', color: 'gray', keyType: 'keyboardKey', className: 'enter' }, { letter: 'Z', color: 'gray', keyType: 'keyboardKey' }, { letter: 'X', color: 'gray', keyType: 'keyboardKey' }, { letter: 'C', color: 'gray', keyType: 'keyboardKey' }, { letter: 'V', color: 'gray', keyType: 'keyboardKey' }, { letter: 'B', color: 'gray', keyType: 'keyboardKey' }, { letter: 'N', color: 'gray', keyType: 'keyboardKey' }, { letter: 'M', color: 'gray', keyType: 'keyboardKey' }, { letter: 'DEL', color: 'gray', keyType: 'keyboardKey' }, ],
+  ],
   index: [0, 0],
   target: myTarget,
   answer: myAnswer,
@@ -89,7 +135,7 @@ class App extends React.Component {
         this.forceUpdate(); //I know I'm not supposed to do this but couldn't any other way. 
       }}>
         <Board rows={state.rows} />
-        <Keyboard />
+        <Keyboard rows={state.keyboardrows}/>
       </div>
     );
   }
@@ -140,8 +186,8 @@ class Space extends React.Component {
         }}
         className={`space 
         ${colorToClassMap[this.props.color]}
-        ${this.props.className}
-        ${boardToClassMap[this.props.keyType]}`
+        ${boardToClassMap[this.props.keyType]}
+        ${this.props.className}`
         } >
         {this.props.letter}
       </div>
@@ -170,16 +216,35 @@ function enterRow() {
     let targetChar = state.target[i];
     if (char===targetChar) {
       ourSpace.color='green';
+      let myind = findKeyboardIndex(ourSpace.letter);
+      state.keyboardrows[myind[0]][myind[1]].color='green';
     } else if (state.target.indexOf(char)!== -1) {
       ourSpace.color = 'yellow'; //small problem: if the letter has already "greened" and appears a second time in the input, it will turn yellow; should be black
+      let myind = findKeyboardIndex(ourSpace.letter);
+      if (state.keyboardrows[myind[0]][myind[1]].color !== 'green'){
+        state.keyboardrows[myind[0]][myind[1]].color = 'yellow';
+      }
     } else {
       ourSpace.color = 'black'
+      let myind = findKeyboardIndex(ourSpace.letter);
+      state.keyboardrows[myind[0]][myind[1]].color = 'black';
     }
   }
   if (hasWon()) {
     window.alert('Euge! Tu es victor!')
   }
 }
+
+function findKeyboardIndex(someletter) {
+  for(let i = 0; i<state.keyboardrows.length; i++) {
+    for (let j=0; j<state.keyboardrows[i].length; j++) {
+      if (state.keyboardrows[i][j].letter==someletter) {
+        return [i,j]
+      }
+    }
+  }
+}
+
 
 function Row({ spaces }) {
   return (
@@ -201,44 +266,13 @@ function Board({ rows }) {
   )
 }
 
-function Keyboard(props) {
+function Keyboard({ rows }) {
   return (
     <div className='keyboard'>
       <div className='keyboard-row'>
-        <Space letter='Q' color='gray' keyType='keyboardKey' />
-        <Space letter='W' color='gray' keyType='keyboardKey' />
-        <Space letter='E' color='gray' keyType='keyboardKey' />
-        <Space letter='R' color='gray' keyType='keyboardKey' />
-        <Space letter='T' color='gray' keyType='keyboardKey' />
-        <Space letter='Y' color='gray' keyType='keyboardKey' />
-        <Space letter='U' color='gray' keyType='keyboardKey' />
-        <Space letter='I' color='gray' keyType='keyboardKey' />
-        <Space letter='O' color='gray' keyType='keyboardKey' />
-        <Space letter='P' color='gray' keyType='keyboardKey' />
-      </div>
-
-      <div className='keyboard-row'>
-        <Space letter='A' color='gray' keyType='keyboardKey' />
-        <Space letter='S' color='gray' keyType='keyboardKey' />
-        <Space letter='D' color='gray' keyType='keyboardKey' />
-        <Space letter='F' color='gray' keyType='keyboardKey' />
-        <Space letter='G' color='gray' keyType='keyboardKey' />
-        <Space letter='H' color='gray' keyType='keyboardKey' />
-        <Space letter='J' color='gray' keyType='keyboardKey' />
-        <Space letter='K' color='gray' keyType='keyboardKey' />
-        <Space letter='L' color='gray' keyType='keyboardKey' />
-      </div>
-
-      <div className='keyboard-row'>
-        <Space letter='ENTER' color='gray' keyType='keyboardKey' className='enter' />
-        <Space letter='Z' color='gray' keyType='keyboardKey' />
-        <Space letter='X' color='gray' keyType='keyboardKey' />
-        <Space letter='C' color='gray' keyType='keyboardKey' />
-        <Space letter='V' color='gray' keyType='keyboardKey' />
-        <Space letter='B' color='gray' keyType='keyboardKey' />
-        <Space letter='N' color='gray' keyType='keyboardKey' />
-        <Space letter='M' color='gray' keyType='keyboardKey' />
-        <Space letter='DEL' color='gray' keyType='keyboardKey' />
+        {
+          rows.map((row, key) => <Row key={key} spaces = {row}></Row>)
+        }
       </div>
     </div>
   )

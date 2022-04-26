@@ -25,11 +25,17 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin-top: 1rem;
 }
 
 .keyboard-row {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  max-width: 500px;
 }
 
 .main {
@@ -115,6 +121,11 @@ nav {
 
 .enter {
    padding: 0 10px; 
+   background-color: #D3D6DA;
+}
+
+.enter:hover {
+  background-color: gray;
 }
 
 .endingMessage {
