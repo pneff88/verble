@@ -1,5 +1,71 @@
+import { render } from '@testing-library/react';
 import React from 'react';
 import './App.css';
+
+let dictionary = [
+  ["PATER", "father"],
+  ["MATER", "mother"],
+  ["CANIS", "dog"],
+  ["SEDET", "is sitting"],
+  ["BIBIT", "is drinking"],
+  ["CIBUS", "food"],
+  ["SALIT", "jumps"],
+  ["SALVE", "hello"],
+  ["AUDIT", "hears, listens to"],
+  ["CENAM", "dinner"],
+  ["VINUM", "wine"],
+  ["VIDET", "sees"],
+  ["CENAT", "eats dinner, dines"],
+  ["VOCAT", "calls"],
+  ["DUCIT", "leads"],
+  ["PETIT", "heads of, attacks"],
+  ["TENET", "is holding"],
+  ["SENEX", "old man"],
+  ["POETA", "poet"],
+  ["RIDET", "laughs, smiles"],
+  ["NAVEM", "ship"],
+  ["HABET", "has"],
+  ["DOCTA", "skillful, good at her job"],
+  ["SATIS", "enough"],
+  ["TAMEN", "however"],
+  ["CERAM", "wax tablet"],
+  ["TRADIT", "hands over"],
+  ["CAPIT", "takes"],
+  ["IUDEX", "judge"],
+  ["HODIE", "today"],
+  ["DEBET", "owes"],
+  ["TESTIS", "witness"],
+  ["CELAT", "is hiding"],
+  ["DECEM", "ten"],
+  ["PAUPER", "a poor man"],
+  ["PACEM", "peace"],
+    ["SOLUS", "lonely"],
+    ["CAUPO", "innkeeper"],
+    ["DIVES", "rich"],
+    ["MURUM", "wall"],
+    ["TANTUM", "only"],
+    ["MECUM", "with me"],
+    ["SENSI", "felt"],
+    ["NUBEM", "cloud"],
+    ["SONOS", "noises"],
+    ["PAVOR", "panic"],
+    ["CINIS", "ash"],
+    ["VALEO", "I feel well"],
+    ["FINIS", "end"],
+    ["FUMUM", "smoke"],
+    ["IUBEO", "order"],
+
+]
+function selectRandomEntry() {
+  let targetEntry = dictionary[Math.floor(Math.random()*dictionary.length)];
+  return targetEntry;
+}
+
+let targetEntry = selectRandomEntry();
+console.log(targetEntry)
+let myTarget = targetEntry[0];
+let myAnswer = targetEntry[1];
+
 let state = {
   rows: [
     [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
@@ -10,7 +76,8 @@ let state = {
     [{ letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }, { letter: '', color: 'white', keyType: 'boardKey' }],
   ],
   index: [0, 0],
-  target: 'SEDET',
+  target: myTarget,
+  answer: myAnswer,
   victor: false,
 };
 
@@ -20,24 +87,14 @@ class App extends React.Component {
     return (
       <div className='main' onClick={() => {
         this.forceUpdate(); //I know I'm not supposed to do this but couldn't any other way. 
-        console.log("hi")
       }}>
         <Board rows={state.rows} />
         <Keyboard />
       </div>
     );
-
   }
-  
 }
-// function App() {
-//   return (
-//     <div className='main'>
-//       <Board rows={state.rows} />
-//       <Keyboard />
-//     </div>
-//   );
-// }
+
 class Space extends React.Component {
   render() {
 
@@ -58,16 +115,14 @@ class Space extends React.Component {
     return (
       <div
         onClick={() => {
-          if (this.props.letter == 'ENTER') {
-            console.log('Enter pressed')
-            if (state.index[1] == 5) {
+          if (this.props.letter === 'ENTER') {
+            if (state.index[1] === 5) {
               enterRow();
               state.index[0] = state.index[0] + 1;
               state.index[1] = 0;
             }
-          } else if (this.props.letter == 'DEL') {
-            console.log('Del pressed.')
-            if (state.index[1] < 4 && state.index[1] > 0) {
+          } else if (this.props.letter === 'DEL') {
+            if (state.index[1] <=5 && state.index[1] > 0) {
               state.index[1] = state.index[1] - 1;
               let currentSpace = state.rows[state.index[0]][state.index[1]]
               currentSpace.letter = '';
@@ -79,7 +134,9 @@ class Space extends React.Component {
             console.log(state);
             state.index[1] = state.index[1] + 1;
           }
-          console.log(state.index)
+          if (state.index[0]===6) {
+            alert("Eheu! Tu non es victor...")
+          }
         }}
         className={`space 
         ${colorToClassMap[this.props.color]}
@@ -98,13 +155,12 @@ function hasWon(){
     let ourSpace = state.rows[rowIndex][i];
     let char = ourSpace.letter;
     let targetChar = state.target[i];
-    if (char != targetChar) {
+    if (char !== targetChar) {
       return false
     }
   }
   return true
 }
-
 
 function enterRow() {
   let rowIndex = state.index[0];
@@ -112,16 +168,16 @@ function enterRow() {
     let ourSpace = state.rows[rowIndex][i];
     let char = ourSpace.letter;
     let targetChar = state.target[i];
-    if (char==targetChar) {
+    if (char===targetChar) {
       ourSpace.color='green';
-    } else if (state.target.indexOf(char)!= -1) {
+    } else if (state.target.indexOf(char)!== -1) {
       ourSpace.color = 'yellow'; //small problem: if the letter has already "greened" and appears a second time in the input, it will turn yellow; should be black
     } else {
       ourSpace.color = 'black'
     }
   }
   if (hasWon()) {
-    alert('Euge! Tu es victor!')
+    window.alert('Euge! Tu es victor!')
   }
 }
 
@@ -187,5 +243,11 @@ function Keyboard(props) {
     </div>
   )
 }
+
+// function Modal(props) {
+//   <div className = 'modal'>
+//     {this.props.message}
+//   </div>
+// }
 
 export default App;

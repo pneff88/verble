@@ -116,3 +116,7 @@ nav {
 .enter {
    padding: 0 10px; 
 }
+
+.endingMessage {
+  background-color: #6AAA64;
+}
