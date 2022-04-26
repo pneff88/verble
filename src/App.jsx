@@ -196,7 +196,7 @@ class Space extends React.Component {
             console.log(state);
             state.index[1] = state.index[1] + 1;
           }
-          if (state.index[0]===6) {
+          if (state.index[0]===6 && state.victor===false) {
             state.message="Eheu! Tu non es victor...";
             state.modalvisibility='visible';
           }
@@ -222,6 +222,7 @@ function hasWon(){
       return false
     }
   }
+  state.victor=true;
   return true
 }
 
