@@ -254,8 +254,8 @@ function enterRow() {
       }
     } 
   if (hasWon()) {
-    // state.message='Euge! Tu es victor!';
-    state.victoryModalvisibility='visible';
+    state.message='Euge! Tu es victor!';
+    state.modalvisibility='visible';
   }
   console.log(state.index)
 }
