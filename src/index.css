@@ -146,3 +146,18 @@ nav {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.victoryModal {
+  position: absolute;
+  background-color: lightcoral;
+  border: 3px solid goldenrod;
+  border-radius: 10px;
+  z-index: 1;
+  width:350px;
+  min-height:200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+}

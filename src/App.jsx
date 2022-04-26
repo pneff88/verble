@@ -103,6 +103,7 @@ function selectRandomEntry() {
 }
 
 let targetEntry = selectRandomEntry();
+
 console.log(targetEntry)
 let myTarget = targetEntry[0];
 let myAnswer = targetEntry[1];
@@ -125,8 +126,10 @@ let state = {
   target: myTarget,
   answer: myAnswer,
   victor: false,
+  bonus: false,
   message: 'THIS IS A TEST',
   modalvisibility: 'hidden',
+  victorymodalvisibility: 'visible',
 };
 
 
@@ -136,6 +139,7 @@ class App extends React.Component {
       <div className='main' onClick={() => {
         this.forceUpdate(); //I know I'm not supposed to do this but couldn't any other way. 
       }}>
+
         <Modal message={state.message} ></Modal>
         <Board rows={state.rows} />
         <Keyboard rows={state.keyboardrows}/>
@@ -250,8 +254,8 @@ function enterRow() {
       }
     } 
   if (hasWon()) {
-    state.message='Euge! Tu es victor!';
-    state.modalvisibility='visible';
+    // state.message='Euge! Tu es victor!';
+    state.victoryModalvisibility='visible';
   }
   console.log(state.index)
 }
@@ -320,5 +324,16 @@ function Modal(props) {
     </div>
   )
 }
+
+// function Victorymodal(props) {
+//   return (
+//     <div className = 'victoryModal' style = {{visibility: state.victorymodalvisibility}}>
+//       <div>Quintilianus * SPQR * Verble</div>
+//       <div>Euge! Tu es victor!</div>
+//         <div>For bonus pecunia, what does {targetEntry[0]} mean?</div>
+//         <input type='radio' name='mc' value='correct'>{props.answer}</input>
+//     </div>
+//   )
+// }
 
 export default App;
