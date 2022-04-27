@@ -134,7 +134,7 @@ nav {
 
 .modal {
   position: absolute;
-  background-color: lightcoral;
+  background-color: rgb(255, 77, 77);
   border: 3px solid goldenrod;
   border-radius: 10px;
   z-index: 1;
@@ -149,7 +149,7 @@ nav {
 
 .victoryModal {
   position: absolute;
-  background-color: lightcoral;
+  background-color: rgb(255, 77, 77);
   border: 3px solid goldenrod;
   border-radius: 10px;
   z-index: 1;

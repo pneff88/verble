@@ -130,6 +130,7 @@ let state = {
   message: 'THIS IS A TEST',
   modalvisibility: 'hidden',
   victorymodalvisibility: 'visible',
+  points: 0,
 };
 
 
@@ -226,6 +227,7 @@ function hasWon(){
       return false
     }
   }
+  state.points=(6-state.index[0])*10;
   state.victor=true;
   return true
 }
@@ -254,7 +256,7 @@ function enterRow() {
       }
     } 
   if (hasWon()) {
-    state.message='Euge! Tu es victor!';
+    state.message=`Euge! Tu es victor! You have earned ${state.points} denarii!`;
     state.modalvisibility='visible';
   }
   console.log(state.index)
